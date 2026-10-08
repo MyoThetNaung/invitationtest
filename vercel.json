@@ -1,0 +1,6 @@
+{
+  "buildCommand": null,
+  "rewrites": [
+    { "source": "/admin", "destination": "/admin.html" }
+  ]
+}
