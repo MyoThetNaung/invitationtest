@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f4eadf" />
+  <title>Amelia &amp; Julian — Wedding Invitation</title>
+  <meta name="description" content="You are invited to the wedding of Amelia Claire Hart and Julian Ellis Reeves, Saturday, 20 June 2027, at The Rosewood Conservatory, Charleston." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Great+Vibes&display=swap" rel="stylesheet" />
+  <link rel="preload" as="image" href="assets/couple-portrait.jpg" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect fill='%23f4eadf' width='64' height='64'/%3E%3Ctext x='32' y='40' text-anchor='middle' font-size='22' font-family='Georgia' fill='%239a7344'%3EA%26J%3C/text%3E%3C/svg%3E" />
+  <script>
+    try {
+      if (sessionStorage.getItem("invitation-open") === "1") {
+        document.documentElement.classList.add("opened", "instant");
+      }
+    } catch (error) {
+      /* sessionStorage may be unavailable */
+    }
+  </script>
+  <style>
+    :root {
+      --ivory: #f7f1e8;
+      --paper: #fffaf4;
+      --ink: #3a312b;
+      --muted: #6f6258;
+      --gold: #9a7344;
+      --gold-soft: #c6aa7a;
+      --line: rgba(154, 115, 68, 0.35);
+      --blush: #c98984;
+      --wax: #8d3b3a;
+      --shadow: 0 24px 60px rgba(78, 52, 28, 0.1);
+      --serif: "Cormorant Garamond", Palatino, "Palatino Linotype", Georgia, serif;
+      --script: "Great Vibes", "Snell Roundhand", "Segoe Script", cursive;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--serif);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(201, 137, 132, 0.16), transparent 32%),
+        radial-gradient(circle at 100% 8%, rgba(198, 170, 122, 0.2), transparent 28%),
+        radial-gradient(circle at 80% 100%, rgba(126, 145, 118, 0.12), transparent 32%),
+        var(--ivory);
+      min-height: 100vh;
+    }
+    html:not(.opened),
+    html:not(.opened) body {
+      overflow: hidden;
+      height: 100%;
+    }
+    img { max-width: 100%; }
+    button, input, textarea { font: inherit; color: inherit; }
+    ::selection { background: #ead3c4; color: var(--ink); }
+
+    .petals {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 35;
+    }
+    .petal {
+      position: absolute;
+      top: -28px;
+      left: var(--x);
+      width: var(--s);
+      height: calc(var(--s) * 1.4);
+      background: radial-gradient(circle at 30% 30%, #fff 0%, var(--c) 42%, var(--c) 100%);
+      border-radius: 80% 8% 80% 8%;
+      opacity: 0.8;
+      animation: fall var(--dur) linear var(--delay) infinite;
+      will-change: transform;
+    }
+    @keyframes fall {
+      0% { transform: translate3d(0, -12vh, 0) rotate(0deg); }
+      100% { transform: translate3d(var(--drift), 112vh, 0) rotate(var(--spin)); }
+    }
+
+    .intro {
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background:
+        radial-gradient(ellipse at center, rgba(255, 250, 244, 0.2), transparent 55%),
+        linear-gradient(180deg, #fbf6ee 0%, #f3e6d6 100%);
+    }
+    html.opened .intro {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.7s ease 1.25s, visibility 0s linear 1.95s;
+    }
+    html.instant .intro { display: none; }
+
+    .envelope-wrap {
+      text-align: center;
+      animation: arrive 1s ease both;
+    }
+    @keyframes arrive {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: none; }
+    }
+    .intro-kicker {
+      margin: 0 0 22px;
+      letter-spacing: 0.34em;
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      color: var(--gold);
+    }
+    .envelope {
+      width: min(380px, 88vw);
+      height: 236px;
+      margin: 0 auto;
+      perspective: 1000px;
+      filter: drop-shadow(0 22px 30px rgba(92, 62, 32, 0.16));
+    }
+    .env-body {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background: #e6d3bb;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    html.opened .env-body { overflow: visible; }
+    .env-letter {
+      position: absolute;
+      left: 7%;
+      right: 7%;
+      top: 22px;
+      height: 156px;
+      z-index: 1;
+      display: grid;
+      place-items: center;
+      align-content: center;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      text-align: center;
+      transition: transform 1s cubic-bezier(0.2, 0.7, 0.2, 1) 0.45s;
+    }
+    html.opened .env-letter { transform: translateY(-120px); }
+    .env-letter p {
+      margin: 0;
+      font-family: var(--script);
+      font-size: 2.35rem;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .env-letter small {
+      display: block;
+      margin-top: 8px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      font-size: 0.68rem;
+      color: var(--gold);
+    }
+    .env-pocket {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      background: linear-gradient(180deg, #f4e7d6 0%, #e7d3b8 100%);
+      clip-path: polygon(0 48%, 50% 76%, 100% 48%, 100% 100%, 0 100%);
+    }
+    .env-pocket::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 62%;
+      background:
+        linear-gradient(128deg, transparent 49.4%, rgba(154, 115, 68, 0.2) 50%, transparent 50.6%),
+        linear-gradient(232deg, transparent 49.4%, rgba(154, 115, 68, 0.2) 50%, transparent 50.6%);
+    }
+    .env-flap {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      background: linear-gradient(180deg, #fbf7f1 0%, #ead9c2 100%);
+      clip-path: polygon(0 0, 100% 0, 100% 46%, 50% 74%, 0 46%);
+      transform-origin: top center;
+      transition: transform 0.9s cubic-bezier(0.55, 0.02, 0.2, 1);
+      backface-visibility: hidden;
+    }
+    html.opened .env-flap {
+      transform: rotateX(188deg);
+      z-index: 0;
+    }
+    .wax {
+      position: absolute;
+      left: 50%;
+      top: 64%;
+      z-index: 5;
+      width: 78px;
+      height: 78px;
+      border: 0;
+      border-radius: 50% 46% 52% 48%;
+      transform: translate(-50%, -50%);
+      cursor: pointer;
+      color: #f8e6d4;
+      letter-spacing: 0.06em;
+      background:
+        radial-gradient(circle at 34% 30%, #e08b84 0%, #a34846 38%, #7c3032 72%, #642628 100%);
+      box-shadow:
+        inset 0 0 0 2px rgba(255, 214, 186, 0.35),
+        inset 0 -10px 14px rgba(0, 0, 0, 0.22),
+        0 8px 16px rgba(80, 24, 24, 0.28);
+      transition: transform 0.35s ease, opacity 0.35s ease;
+    }
+    .wax span {
+      font-family: var(--serif);
+      font-size: 1.05rem;
+    }
+    .wax:hover { transform: translate(-50%, -50%) scale(1.05); }
+    .wax:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 4px;
+    }
+    html.opened .wax {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.4);
+    }
+    .open-text {
+      margin: 26px 0 0;
+      padding: 0;
+      border: 0;
+      background: none;
+      cursor: pointer;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      font-size: 0.74rem;
+      color: var(--muted);
+    }
+    .open-text:hover { color: var(--gold); }
+    .open-text:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
+
+    .topnav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 6vw 10px;
+      background: rgba(247, 241, 232, 0.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+      transform: translateY(-110%);
+      transition: transform 0.6s ease 1.6s;
+    }
+    html.opened .topnav { transform: translateY(0); }
+    html.instant .topnav { transition: none; }
+    .topnav nav { display: flex; gap: 18px; }
+    .topnav a {
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+    }
+    .topnav a:hover { color: var(--gold); }
+    .topnav .brand {
+      font-family: var(--script);
+      font-size: 2rem;
+      line-height: 1;
+      letter-spacing: 0;
+      text-transform: none;
+      color: var(--ink);
+      padding: 10px 0 0;
+    }
+
+    .invitation {
+      position: relative;
+      z-index: 1;
+      opacity: 0;
+      padding: 108px 20px 72px;
+    }
+    html.opened .invitation {
+      opacity: 1;
+      transition: opacity 0.9s ease 1.7s;
+    }
+    html.instant .invitation { opacity: 1; transition: none; }
+
+    .sheet {
+      width: min(760px, 100%);
+      margin: 0 auto;
+      padding: 64px 56px 56px;
+      background: rgba(255, 250, 244, 0.9);
+      box-shadow:
+        inset 0 0 0 1px rgba(154, 115, 68, 0.38),
+        inset 0 0 0 10px rgba(255, 250, 244, 0.95),
+        inset 0 0 0 11px rgba(154, 115, 68, 0.22),
+        var(--shadow);
+    }
+
+    .kicker, .label {
+      margin: 0;
+      text-align: center;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--gold);
+    }
+    .portrait {
+      width: min(270px, 68vw);
+      margin: 28px auto 8px;
+      padding: 9px;
+      background: #fff;
+      border-radius: 160px 160px 16px 16px;
+      box-shadow: 0 0 0 1px rgba(154, 115, 68, 0.45), 0 16px 36px rgba(90, 60, 30, 0.12);
+    }
+    .portrait-window {
+      overflow: hidden;
+      border-radius: 150px 150px 8px 8px;
+    }
+    .portrait img {
+      display: block;
+      width: 100%;
+      height: 340px;
+      object-fit: cover;
+      object-position: center 42%;
+      animation: ken 22s ease-in-out infinite alternate;
+    }
+    @keyframes ken {
+      from { transform: scale(1); }
+      to { transform: scale(1.06); }
+    }
+    .caption {
+      margin: 10px 0 0;
+      text-align: center;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-size: 0.68rem;
+      color: var(--muted);
+    }
+
+    h1 {
+      margin: 18px 0 0;
+      text-align: center;
+      font-family: var(--script);
+      font-size: clamp(4.4rem, 12vw, 6.6rem);
+      font-weight: 400;
+      line-height: 0.82;
+    }
+    h1 span { display: block; }
+    h1 .amp {
+      margin: 0.08em 0;
+      font-size: 0.48em;
+      color: var(--gold);
+    }
+    .honour {
+      max-width: 28rem;
+      margin: 18px auto 0;
+      text-align: center;
+      font-size: 1.35rem;
+      font-style: italic;
+      font-weight: 500;
+      line-height: 1.45;
+    }
+    .flourish {
+      display: block;
+      width: 180px;
+      height: 16px;
+      margin: 22px auto;
+      color: var(--gold);
+    }
+    .flourish path {
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 0.8;
+      stroke-linecap: round;
+      stroke-dasharray: 220;
+      stroke-dashoffset: 220;
+    }
+    html.opened .flourish path {
+      animation: draw 1.4s ease 1.8s forwards;
+    }
+    html.instant .flourish path {
+      animation: draw 1.2s ease forwards;
+    }
+    @keyframes draw { to { stroke-dashoffset: 0; } }
+
+    .dateblock { text-align: center; }
+    .dateblock .weekday,
+    .dateblock .month {
+      display: block;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      font-size: 0.82rem;
+      color: var(--gold);
+    }
+    .dateblock strong {
+      display: block;
+      margin: 4px 0;
+      font-size: clamp(4rem, 10vw, 5.4rem);
+      font-weight: 500;
+      line-height: 0.85;
+    }
+    .dateblock em {
+      display: block;
+      margin-top: 8px;
+      font-size: 1.25rem;
+      font-style: italic;
+    }
+    .venue {
+      margin: 28px 0 0;
+      text-align: center;
+    }
+    .venue strong {
+      display: block;
+      font-size: 1.7rem;
+      font-weight: 500;
+    }
+    .venue span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 1.15rem;
+      font-style: italic;
+    }
+    .text-link {
+      display: inline-block;
+      margin-top: 12px;
+      color: var(--gold);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      text-decoration: none;
+      font-size: 0.74rem;
+      border-bottom: 1px solid var(--gold-soft);
+    }
+    .text-link:hover { color: var(--ink); }
+
+    .letter {
+      max-width: 36rem;
+      margin: 18px auto 0;
+    }
+    .letter p {
+      margin: 0 0 1em;
+      font-size: 1.28rem;
+      line-height: 1.7;
+    }
+    .salute { font-style: italic; }
+    .signature {
+      margin: 8px 0 0;
+      font-family: var(--script);
+      font-size: 2.5rem;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .signed-names {
+      margin: 4px 0 0;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .section { margin-top: 72px; }
+    h2 {
+      margin: 0;
+      text-align: center;
+      font-family: var(--script);
+      font-size: clamp(2.8rem, 6vw, 3.6rem);
+      font-weight: 400;
+    }
+    .section-intro {
+      margin: 8px auto 0;
+      max-width: 26rem;
+      text-align: center;
+      font-size: 1.2rem;
+      font-style: italic;
+      color: var(--muted);
+    }
+    .moments {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      margin: 36px 0 0;
+      padding: 0;
+    }
+    .moments li {
+      padding: 6px 22px 0;
+      text-align: center;
+      border-left: 1px solid var(--line);
+    }
+    .moments li:first-child { border-left: 0; }
+    .moments time {
+      display: block;
+      letter-spacing: 0.18em;
+      font-size: 0.78rem;
+      color: var(--gold);
+    }
+    .moments h3 {
+      margin: 8px 0;
+      font-family: var(--serif);
+      font-size: 1.6rem;
+      font-weight: 500;
+    }
+    .moments p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.08rem;
+      line-height: 1.5;
+    }
+    .notes {
+      display: flex;
+      justify-content: center;
+      gap: 28px;
+      margin-top: 32px;
+      text-align: center;
+    }
+    .notes div { max-width: 220px; }
+    .notes strong {
+      display: block;
+      margin-bottom: 4px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--gold);
+    }
+    .notes p { margin: 0; font-size: 1.08rem; }
+
+    .countdown {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      margin-top: 28px;
+      text-align: center;
+    }
+    .countdown div { padding: 8px 4px; }
+    .countdown div + div { border-left: 1px solid var(--line); }
+    .countdown b {
+      display: block;
+      font-size: clamp(2.2rem, 5vw, 3.2rem);
+      font-weight: 500;
+      line-height: 1;
+    }
+    .countdown span {
+      display: block;
+      margin-top: 6px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-size: 0.68rem;
+      color: var(--muted);
+    }
+    .today-note {
+      display: none;
+      margin: 18px 0 0;
+      text-align: center;
+      font-family: var(--script);
+      font-size: 2.4rem;
+    }
+    .countdown.is-today { display: none; }
+    .countdown.is-today + .today-note { display: block; }
+
+    .rsvp {
+      max-width: 460px;
+      margin: 28px auto 0;
+    }
+    .choices {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .choice {
+      position: relative;
+      cursor: pointer;
+    }
+    .choice input {
+      position: absolute;
+      opacity: 0;
+      inset: 0;
+    }
+    .choice span {
+      display: grid;
+      place-items: center;
+      min-height: 64px;
+      padding: 10px;
+      text-align: center;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.45);
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+    .choice input:checked + span {
+      border-color: var(--gold);
+      background: rgba(198, 170, 122, 0.16);
+    }
+    .choice input:focus-visible + span {
+      outline: 2px solid var(--gold);
+      outline-offset: 2px;
+    }
+    .field { margin-top: 16px; }
+    .field label {
+      display: block;
+      margin-bottom: 6px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-size: 0.7rem;
+      color: var(--gold);
+    }
+    .field input, .field textarea, .field select {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.7);
+      outline: none;
+    }
+    .field textarea { min-height: 96px; resize: vertical; }
+    .field input:focus, .field textarea:focus, .field select:focus {
+      border-color: var(--gold);
+    }
+    .form-error {
+      min-height: 1.2em;
+      margin: 12px 0 0;
+      text-align: center;
+      color: #8d3b3a;
+      font-style: italic;
+    }
+    .submit {
+      display: block;
+      width: 100%;
+      margin-top: 8px;
+      padding: 14px 18px;
+      border: 0;
+      cursor: pointer;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      color: #fffaf4;
+      background: var(--ink);
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+    .submit:hover { background: #2a231e; }
+    .fine {
+      margin: 12px 0 0;
+      text-align: center;
+      font-size: 0.95rem;
+      font-style: italic;
+      color: var(--muted);
+    }
+    .thanks {
+      text-align: center;
+      padding: 12px 0 8px;
+      animation: arrive 0.7s ease both;
+    }
+    .thanks .script {
+      margin: 0;
+      font-family: var(--script);
+      font-size: 3.4rem;
+    }
+    .thanks p { font-size: 1.25rem; line-height: 1.6; }
+    .ghost {
+      margin-top: 8px;
+      border: 0;
+      background: none;
+      cursor: pointer;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      color: var(--gold);
+    }
+
+    .footer {
+      margin-top: 64px;
+      text-align: center;
+    }
+    .monogram {
+      margin: 0;
+      font-family: var(--script);
+      font-size: 3rem;
+      line-height: 1;
+    }
+    .footer small {
+      display: block;
+      margin-top: 8px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    .reveal.in {
+      animation: rise 0.9s ease forwards;
+    }
+    @keyframes rise {
+      to { opacity: 1; transform: none; }
+    }
+
+    @media (max-width: 700px) {
+      .sheet { padding: 48px 22px 36px; }
+      .moments { grid-template-columns: 1fr; gap: 22px; }
+      .moments li { border-left: 0; border-top: 1px solid var(--line); padding: 18px 8px 0; }
+      .moments li:first-child { border-top: 0; padding-top: 0; }
+      .notes { flex-direction: column; align-items: center; }
+      .choices { grid-template-columns: 1fr; }
+      .topnav { padding: 10px 14px 8px; }
+      .topnav nav { gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+      .topnav a { letter-spacing: 0.08em; font-size: 0.66rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .petal, .portrait img, .envelope-wrap { animation: none; }
+      .reveal { opacity: 1; transform: none; }
+      .flourish path { stroke-dashoffset: 0; }
+      html.opened .intro,
+      html.opened .invitation,
+      html.opened .topnav,
+      .env-flap, .env-letter, .wax {
+        transition: none;
+      }
+    }
+
+    @media print {
+      .intro, .petals, .topnav, .rsvp, .open-text { display: none !important; }
+      .invitation, .reveal { opacity: 1 !important; transform: none !important; }
+      body { background: white; }
+    }
+  </style>
+</head>
+<body>
+  <div class="petals" id="petals" aria-hidden="true"></div>
+
+  <div class="intro" id="intro">
+    <div class="envelope-wrap">
+      <p class="intro-kicker">A letter for you</p>
+      <div class="envelope">
+        <div class="env-body">
+          <div class="env-letter">
+            <p>Amelia <span style="color:#9a7344">&amp;</span> Julian</p>
+            <small>20 June 2027</small>
+          </div>
+          <div class="env-pocket"></div>
+          <div class="env-flap"></div>
+          <button class="wax" id="openBtn" type="button" aria-label="Open the invitation">
+            <span>A&amp;J</span>
+          </button>
+        </div>
+      </div>
+      <button class="open-text" id="openText" type="button">Open the invitation</button>
+    </div>
+  </div>
+
+  <header class="topnav">
+    <a class="brand" href="#top">A &amp; J</a>
+    <nav>
+      <a href="#gathering">Gathering</a>
+      <a href="#letter">Letter</a>
+      <a href="#day">The day</a>
+      <a href="#reply">Reply</a>
+    </nav>
+  </header>
+
+  <main class="invitation" id="top">
+    <article class="sheet">
+      <header class="hero" id="gathering">
+        <p class="kicker reveal">Together with their families</p>
+        <figure class="portrait reveal">
+          <div class="portrait-window">
+            <img src="assets/couple-portrait.jpg" width="864" height="1152" alt="Amelia and Julian standing together among white roses in a sunlit conservatory" />
+          </div>
+          <figcaption class="caption">The Rosewood Conservatory</figcaption>
+        </figure>
+        <h1 class="reveal">
+          <span>Amelia</span>
+          <span class="amp">&amp;</span>
+          <span>Julian</span>
+        </h1>
+        <p class="honour reveal">request the honour of your presence at the celebration of their marriage</p>
+        <svg class="flourish" viewBox="0 0 200 16" aria-hidden="true">
+          <path d="M4 8 H86 C96 8 96 3 100 8 C104 13 104 8 114 8 H196" />
+        </svg>
+        <div class="dateblock reveal">
+          <span class="weekday">Saturday</span>
+          <strong>20</strong>
+          <span class="month">June 2027</span>
+          <em>at four o’clock in the afternoon</em>
+        </div>
+        <p class="venue reveal">
+          <strong>The Rosewood Conservatory</strong>
+          <span>Charleston, South Carolina</span>
+          <a class="text-link" id="mapLink" href="https://www.google.com/maps/search/?api=1&amp;query=Charleston%20South%20Carolina" target="_blank" rel="noopener noreferrer">View the city</a>
+        </p>
+      </header>
+
+      <section class="letter section reveal" id="letter">
+        <p class="salute">Dearest family and friends,</p>
+        <p>There is a glasshouse in Charleston where the roses climb toward the light. On a Saturday afternoon in June, beneath that glass, we will promise each other the quiet miracles: morning coffee, long walks, and a life built gently.</p>
+        <p>Please come. Wear something that makes you feel lovely. Bring your laughter, and leave your worries at the garden gate. There will be music, a long table, and time enough to linger.</p>
+        <p>Until then, we are holding a place for you.</p>
+        <p class="signature">With all our love</p>
+        <p class="signed-names">Amelia Claire Hart<br />&amp; Julian Ellis Reeves</p>
+      </section>
+
+      <section class="section" id="day">
+        <h2 class="reveal">The day</h2>
+        <p class="section-intro reveal">Dinner and dancing follow the vows.</p>
+        <ol class="moments">
+          <li class="reveal">
+            <time datetime="16:00">4:00</time>
+            <h3>Ceremony</h3>
+            <p>Vows in the glasshouse, among the climbing roses.</p>
+          </li>
+          <li class="reveal">
+            <time datetime="17:15">5:15</time>
+            <h3>Cocktails</h3>
+            <p>In the garden while the afternoon turns gold.</p>
+          </li>
+          <li class="reveal">
+            <time datetime="18:30">6:30</time>
+            <h3>Dinner</h3>
+            <p>A long table, then dancing under the glass.</p>
+          </li>
+        </ol>
+        <div class="notes">
+          <div class="reveal">
+            <strong>Attire</strong>
+            <p>Garden formal. Soft colors are especially welcome.</p>
+          </div>
+          <div class="reveal">
+            <strong>Kindly reply</strong>
+            <p>By the first of May, two thousand twenty-seven.</p>
+          </div>
+        </div>
+        <p style="text-align:center; margin-top: 22px;" class="reveal">
+          <a class="text-link" id="calendarLink" href="#">Add to calendar</a>
+        </p>
+      </section>
+
+      <section class="section reveal" id="until">
+        <p class="label">Until we meet in the garden</p>
+        <div class="countdown" id="countdown" aria-live="polite">
+          <div><b id="days">0</b><span>Days</span></div>
+          <div><b id="hours">0</b><span>Hours</span></div>
+          <div><b id="minutes">0</b><span>Minutes</span></div>
+          <div><b id="seconds">0</b><span>Seconds</span></div>
+        </div>
+        <p class="today-note" id="todayNote">Today we are married</p>
+      </section>
+
+      <section class="section" id="reply">
+        <h2 class="reveal">Kindly reply</h2>
+        <p class="section-intro reveal">Tell us if you can share the day.</p>
+        <form class="rsvp reveal" id="rsvpForm" novalidate>
+          <div class="choices">
+            <label class="choice">
+              <input type="radio" name="attending" value="yes" />
+              <span>Joyfully accept</span>
+            </label>
+            <label class="choice">
+              <input type="radio" name="attending" value="no" />
+              <span>Regretfully decline</span>
+            </label>
+          </div>
+          <div class="field">
+            <label for="guestName">Your name</label>
+            <input id="guestName" name="guestName" type="text" maxlength="80" autocomplete="name" placeholder="Name as you would like it written" />
+          </div>
+          <div class="field" id="guestCountField">
+            <label for="guestCount">Number of guests</label>
+            <select id="guestCount" name="guestCount">
+              <option value="1">1</option>
+              <option value="2" selected>2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="note">A note for the couple</label>
+            <textarea id="note" name="note" maxlength="400" placeholder="A wish, a song, a dietary note"></textarea>
+          </div>
+          <p class="form-error" id="formError" role="alert"></p>
+          <button class="submit" type="submit">Send reply</button>
+          <p class="fine">Your reply stays on this device.</p>
+        </form>
+        <div class="thanks" id="thanks" hidden>
+          <p class="script" id="thanksTitle">Thank you</p>
+          <p id="thanksText"></p>
+          <button class="ghost" id="editReply" type="button">Edit reply</button>
+        </div>
+      </section>
+
+      <footer class="footer reveal">
+        <p class="monogram">A &amp; J</p>
+        <small>20 June 2027 · Charleston</small>
+      </footer>
+    </article>
+  </main>
+
+  <noscript>
+    <p style="text-align:center; padding: 24px;">Amelia &amp; Julian invite you to their wedding on Saturday, 20 June 2027, at four o’clock, The Rosewood Conservatory, Charleston.</p>
+  </noscript>
+
+  <script>
+    (function () {
+      const WEDDING = new Date(2027, 5, 20, 16, 0, 0);
+      const STORAGE_KEY = "rosewood-rsvp";
+
+      const petals = document.getElementById("petals");
+      const colors = ["#e7b7b2", "#f0d0c6", "#f6e4cf", "#ddc4c2", "#f3d5c4"];
+
+      function createPetals(count) {
+        const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (reduce) return;
+        for (let i = 0; i < count; i += 1) {
+          const petal = document.createElement("span");
+          petal.className = "petal";
+          petal.style.setProperty("--x", Math.random() * 100 + "%");
+          petal.style.setProperty("--s", (8 + Math.random() * 10) + "px");
+          petal.style.setProperty("--c", colors[i % colors.length]);
+          petal.style.setProperty("--dur", (11 + Math.random() * 10) + "s");
+          petal.style.setProperty("--delay", (-Math.random() * 16) + "s");
+          petal.style.setProperty("--drift", (Math.random() * 120 - 60) + "px");
+          petal.style.setProperty("--spin", (240 + Math.random() * 280) + "deg");
+          petals.appendChild(petal);
+        }
+      }
+
+      function openInvitation() {
+        if (document.documentElement.classList.contains("opened")) return;
+        document.documentElement.classList.add("opened");
+        try { sessionStorage.setItem("invitation-open", "1"); } catch (error) { /* ignore */ }
+        window.setTimeout(revealHero, 1500);
+      }
+
+      function revealHero() {
+        document.querySelectorAll(".hero .reveal").forEach(function (el, index) {
+          window.setTimeout(function () { el.classList.add("in"); }, index * 90);
+        });
+      }
+
+      function watchReveals() {
+        const nodes = document.querySelectorAll(".reveal");
+        if (!("IntersectionObserver" in window)) {
+          nodes.forEach(function (el) { el.classList.add("in"); });
+          return;
+        }
+        const observer = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add("in");
+            observer.unobserve(entry.target);
+          });
+        }, { threshold: 0.2 });
+        nodes.forEach(function (el) { observer.observe(el); });
+      }
+
+      function pad(value) {
+        return String(value).padStart(2, "0");
+      }
+
+      function tick() {
+        const diff = WEDDING.getTime() - Date.now();
+        const countdown = document.getElementById("countdown");
+        if (diff <= 0) {
+          countdown.classList.add("is-today");
+          document.getElementById("todayNote").textContent = diff < -86400000
+            ? "With love, from the garden"
+            : "Today we are married";
+          return;
+        }
+        const total = Math.floor(diff / 1000);
+        document.getElementById("days").textContent = Math.floor(total / 86400);
+        document.getElementById("hours").textContent = pad(Math.floor((total % 86400) / 3600));
+        document.getElementById("minutes").textContent = pad(Math.floor((total % 3600) / 60));
+        document.getElementById("seconds").textContent = pad(total % 60);
+      }
+
+      function calendarUrl() {
+        const start = "20270620T160000";
+        const end = "20270620T230000";
+        const params = new URLSearchParams({
+          action: "TEMPLATE",
+          text: "Wedding of Amelia & Julian",
+          dates: start + "/" + end,
+          location: "The Rosewood Conservatory, Charleston, South Carolina",
+          details: "Ceremony at four o'clock. Cocktails, dinner, and dancing to follow."
+        });
+        return "https://calendar.google.com/calendar/render?" + params.toString();
+      }
+
+      const form = document.getElementById("rsvpForm");
+      const thanks = document.getElementById("thanks");
+      const thanksText = document.getElementById("thanksText");
+      const error = document.getElementById("formError");
+      const guestCountField = document.getElementById("guestCountField");
+
+      function selectedAttendance() {
+        const chosen = form.querySelector("input[name='attending']:checked");
+        return chosen ? chosen.value : "";
+      }
+
+      function syncGuestField() {
+        const hide = selectedAttendance() === "no";
+        guestCountField.classList.toggle("is-hidden", hide);
+        guestCountField.style.display = hide ? "none" : "";
+      }
+
+      function showThanks(data) {
+        const name = data.name;
+        thanksText.textContent = data.attending === "yes"
+          ? name + ", we cannot wait to see you in the garden."
+          : name + ", you will be missed, and you will be in our hearts that day.";
+        form.hidden = true;
+        thanks.hidden = false;
+      }
+
+      function showForm(data) {
+        thanks.hidden = true;
+        form.hidden = false;
+        if (!data) return;
+        document.getElementById("guestName").value = data.name || "";
+        document.getElementById("note").value = data.note || "";
+        document.getElementById("guestCount").value = String(data.guests || 2);
+        const radio = form.querySelector("input[value='" + data.attending + "']");
+        if (radio) radio.checked = true;
+        syncGuestField();
+      }
+
+      form.addEventListener("change", syncGuestField);
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        const name = document.getElementById("guestName").value.trim();
+        const attending = selectedAttendance();
+        const note = document.getElementById("note").value.trim();
+        const guests = attending === "no" ? 0 : Number(document.getElementById("guestCount").value);
+
+        if (!attending) {
+          error.textContent = "Please tell us whether you can come.";
+          return;
+        }
+        if (name.length < 2) {
+          error.textContent = "Please write your name.";
+          document.getElementById("guestName").focus();
+          return;
+        }
+        error.textContent = "";
+        const data = { name: name, attending: attending, guests: guests, note: note };
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (err) { /* ignore */ }
+        showThanks(data);
+      });
+
+      document.getElementById("editReply").addEventListener("click", function () {
+        let saved = null;
+        try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null"); } catch (err) { saved = null; }
+        showForm(saved);
+      });
+
+      document.getElementById("openBtn").addEventListener("click", openInvitation);
+      document.getElementById("openText").addEventListener("click", openInvitation);
+      document.getElementById("calendarLink").href = calendarUrl();
+
+      createPetals(16);
+      watchReveals();
+      tick();
+      window.setInterval(tick, 1000);
+
+      if (document.documentElement.classList.contains("instant")) {
+        revealHero();
+      }
+
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
+        if (saved && saved.name) showThanks(saved);
+      } catch (err) { /* ignore */ }
+    }());
+  </script>
+</body>
+</html>
