@@ -1,3 +1,5 @@
 data/rsvps.json
 data/rsvps.json.tmp
 .vercel
+.env
+.env.local

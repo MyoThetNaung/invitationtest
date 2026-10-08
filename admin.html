@@ -263,7 +263,9 @@
             gate.hidden = false;
             throw new Error("signed-out");
           }
-          if (!response.ok) throw new Error("load");
+          if (!response.ok) {
+            return failureMessage(response).then(function (message) { throw new Error(message); });
+          }
           return response.json();
         }).then(function (data) {
           document.getElementById("totalComing").textContent = data.totalComing;
@@ -275,6 +277,14 @@
         });
       }
 
+      function failureMessage(response) {
+        return response.json().catch(function () { return {}; }).then(function (data) {
+          if (response.status === 401) return data.message || "That password is not right.";
+          if (response.status === 404) return "The hosts login is not on this deployment yet.";
+          return data.message || "The guest list could not be opened. On Vercel, add Upstash Redis and redeploy.";
+        });
+      }
+
       gate.addEventListener("submit", function (event) {
         event.preventDefault();
         gateError.textContent = "";
@@ -283,14 +293,14 @@
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ password: document.getElementById("password").value })
         }).then(function (response) {
-          if (!response.ok) throw new Error("password");
+          if (!response.ok) return failureMessage(response).then(function (message) { throw new Error(message); });
           return response.json();
         }).then(function (data) {
           sessionStorage.setItem(TOKEN_KEY, data.token);
           return loadGuests();
         }).catch(function (error) {
           if (error.message !== "signed-out") {
-            gateError.textContent = "That password is not right.";
+            gateError.textContent = error.message || "The guest list could not be opened.";
           }
         });
       });

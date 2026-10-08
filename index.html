@@ -280,6 +280,24 @@
       color: var(--ink);
       padding: 10px 0 0;
     }
+    .music-toggle {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 60;
+      padding: 12px 16px;
+      border: 1px solid var(--line);
+      background: rgba(255, 250, 244, 0.92);
+      color: var(--gold);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-family: var(--serif);
+      font-size: 0.72rem;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(78, 52, 28, 0.08);
+    }
+    html:not(.opened) .music-toggle { display: none; }
+    .music-toggle[aria-pressed="true"] { color: var(--ink); }
 
     .invitation {
       position: relative;
@@ -736,7 +754,7 @@
     }
 
     @media print {
-      .intro, .petals, .topnav, .rsvp, .open-text { display: none !important; }
+      .intro, .petals, .topnav, .rsvp, .open-text, .music-toggle { display: none !important; }
       .invitation, .reveal { opacity: 1 !important; transform: none !important; }
       body { background: white; }
     }
@@ -764,6 +782,9 @@
       <button class="open-text" id="openText" type="button">Open the invitation</button>
     </div>
   </div>
+
+  <audio id="music" loop preload="auto" src="assets/Beautiful%20in%20white.mp3"></audio>
+  <button class="music-toggle" id="musicToggle" type="button" aria-pressed="false">Music</button>
 
   <header class="topnav">
     <a class="brand" href="#top">A &amp; J</a>
@@ -938,10 +959,26 @@
         }
       }
 
+      const music = document.getElementById("music");
+      const musicToggle = document.getElementById("musicToggle");
+      music.volume = 0.45;
+
+      function setMusicPlaying(playing) {
+        musicToggle.setAttribute("aria-pressed", playing ? "true" : "false");
+        musicToggle.textContent = playing ? "Pause" : "Music";
+      }
+
+      function startMusic() {
+        const play = music.play();
+        if (!play) return;
+        play.then(function () { setMusicPlaying(true); }).catch(function () { setMusicPlaying(false); });
+      }
+
       function openInvitation() {
         if (document.documentElement.classList.contains("opened")) return;
         document.documentElement.classList.add("opened");
         try { sessionStorage.setItem("invitation-open", "1"); } catch (error) { /* ignore */ }
+        startMusic();
         window.setTimeout(revealHero, 1500);
       }
 
@@ -1073,6 +1110,13 @@
 
       document.getElementById("openBtn").addEventListener("click", openInvitation);
       document.getElementById("openText").addEventListener("click", openInvitation);
+      musicToggle.addEventListener("click", function () {
+        if (music.paused) startMusic();
+        else {
+          music.pause();
+          setMusicPlaying(false);
+        }
+      });
       document.getElementById("calendarLink").href = calendarUrl();
 
       createPetals(16);

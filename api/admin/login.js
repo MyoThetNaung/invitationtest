@@ -7,7 +7,10 @@ module.exports = async function handler(req, res) {
     res.status(405).json({ message: "Method not allowed" });
     return;
   }
-  const body = req.body || {};
+  let body = req.body || {};
+  if (typeof body === "string") {
+    try { body = JSON.parse(body); } catch (error) { body = {}; }
+  }
   if (body.password !== store.password()) {
     res.status(401).json({ message: "That password is not right." });
     return;
