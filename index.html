@@ -630,6 +630,13 @@
       color: #8d3b3a;
       font-style: italic;
     }
+    .reply-status {
+      margin: 14px 0 0;
+      text-align: center;
+      color: #6e7d6a;
+      font-size: 1.35rem;
+      font-style: italic;
+    }
     .submit {
       display: block;
       width: 100%;
@@ -888,19 +895,16 @@
             <textarea id="note" name="note" maxlength="400" placeholder="A wish, a song, a dietary note"></textarea>
           </div>
           <p class="form-error" id="formError" role="alert"></p>
+          <p class="reply-status" id="replyStatus" role="status" hidden></p>
           <button class="submit" type="submit">Send reply</button>
-          <p class="fine">Your reply stays on this device.</p>
+          <p class="fine">The couple will see your reply.</p>
         </form>
-        <div class="thanks" id="thanks" hidden>
-          <p class="script" id="thanksTitle">Thank you</p>
-          <p id="thanksText"></p>
-          <button class="ghost" id="editReply" type="button">Edit reply</button>
-        </div>
       </section>
 
       <footer class="footer reveal">
         <p class="monogram">A &amp; J</p>
         <small>20 June 2027 · Charleston</small>
+        <a class="text-link" href="/admin">Hosts</a>
       </footer>
     </article>
   </main>
@@ -998,8 +1002,7 @@
       }
 
       const form = document.getElementById("rsvpForm");
-      const thanks = document.getElementById("thanks");
-      const thanksText = document.getElementById("thanksText");
+      const replyStatus = document.getElementById("replyStatus");
       const error = document.getElementById("formError");
       const guestCountField = document.getElementById("guestCountField");
 
@@ -1014,18 +1017,7 @@
         guestCountField.style.display = hide ? "none" : "";
       }
 
-      function showThanks(data) {
-        const name = data.name;
-        thanksText.textContent = data.attending === "yes"
-          ? name + ", we cannot wait to see you in the garden."
-          : name + ", you will be missed, and you will be in our hearts that day.";
-        form.hidden = true;
-        thanks.hidden = false;
-      }
-
-      function showForm(data) {
-        thanks.hidden = true;
-        form.hidden = false;
+      function fillForm(data) {
         if (!data) return;
         document.getElementById("guestName").value = data.name || "";
         document.getElementById("note").value = data.note || "";
@@ -1033,6 +1025,12 @@
         const radio = form.querySelector("input[value='" + data.attending + "']");
         if (radio) radio.checked = true;
         syncGuestField();
+      }
+
+      function showSent() {
+        error.textContent = "";
+        replyStatus.hidden = false;
+        replyStatus.textContent = "Succeeded to send.";
       }
 
       form.addEventListener("change", syncGuestField);
@@ -1054,14 +1052,23 @@
         }
         error.textContent = "";
         const data = { name: name, attending: attending, guests: guests, note: note };
-        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (err) { /* ignore */ }
-        showThanks(data);
-      });
-
-      document.getElementById("editReply").addEventListener("click", function () {
-        let saved = null;
-        try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null"); } catch (err) { saved = null; }
-        showForm(saved);
+        const button = form.querySelector(".submit");
+        button.disabled = true;
+        fetch("/api/rsvp", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        }).then(function (response) {
+          if (!response.ok) throw new Error("save");
+          return response.json();
+        }).then(function (saved) {
+          try { localStorage.setItem(STORAGE_KEY, JSON.stringify(saved)); } catch (err) { /* ignore */ }
+          showSent();
+        }).catch(function () {
+          error.textContent = "We could not save your reply. Please try again.";
+        }).finally(function () {
+          button.disabled = false;
+        });
       });
 
       document.getElementById("openBtn").addEventListener("click", openInvitation);
@@ -1079,7 +1086,7 @@
 
       try {
         const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
-        if (saved && saved.name) showThanks(saved);
+        if (saved && saved.name) fillForm(saved);
       } catch (err) { /* ignore */ }
     }());
   </script>

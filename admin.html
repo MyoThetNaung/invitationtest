@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hosts — Amelia &amp; Julian</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Great+Vibes&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ivory: #f7f1e8;
+      --paper: #fffaf4;
+      --ink: #3a312b;
+      --muted: #6f6258;
+      --gold: #9a7344;
+      --line: rgba(154, 115, 68, 0.35);
+      --serif: "Cormorant Garamond", Palatino, Georgia, serif;
+      --script: "Great Vibes", "Snell Roundhand", cursive;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: var(--serif);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(201, 137, 132, 0.16), transparent 32%),
+        radial-gradient(circle at 100% 0%, rgba(198, 170, 122, 0.18), transparent 28%),
+        var(--ivory);
+    }
+    a { color: var(--gold); }
+    main {
+      width: min(980px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 36px 0 64px;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    h1 {
+      margin: 0;
+      font-family: var(--script);
+      font-size: clamp(3rem, 8vw, 4.4rem);
+      font-weight: 400;
+      line-height: 0.9;
+    }
+    .kicker {
+      margin: 0 0 6px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      color: var(--gold);
+    }
+    .ghost, .submit {
+      border: 0;
+      cursor: pointer;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-family: var(--serif);
+      font-size: 0.75rem;
+    }
+    .ghost {
+      background: none;
+      color: var(--gold);
+      padding: 8px 0;
+    }
+    .submit {
+      width: 100%;
+      margin-top: 12px;
+      padding: 14px 18px;
+      color: #fffaf4;
+      background: var(--ink);
+    }
+    .gate, .panel {
+      background: rgba(255, 250, 244, 0.92);
+      box-shadow:
+        inset 0 0 0 1px rgba(154, 115, 68, 0.35),
+        0 18px 40px rgba(78, 52, 28, 0.08);
+    }
+    .gate {
+      width: min(420px, 100%);
+      margin: 12vh auto 0;
+      padding: 36px 28px;
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      color: var(--gold);
+    }
+    input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      background: white;
+      font: inherit;
+      color: inherit;
+    }
+    .error {
+      min-height: 1.2em;
+      margin: 10px 0 0;
+      color: #8d3b3a;
+      font-style: italic;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+    .stat {
+      padding: 22px 18px;
+      text-align: center;
+      background: rgba(255, 250, 244, 0.92);
+      border: 1px solid var(--line);
+    }
+    .stat b {
+      display: block;
+      font-size: clamp(2.8rem, 6vw, 4.2rem);
+      font-weight: 500;
+      line-height: 0.9;
+    }
+    .stat span {
+      display: block;
+      margin-top: 8px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+    .columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+    section {
+      padding: 22px 18px 8px;
+    }
+    h2 {
+      margin: 0 0 14px;
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 500;
+    }
+    ul { list-style: none; margin: 0; padding: 0; }
+    li {
+      padding: 14px 0;
+      border-top: 1px solid var(--line);
+    }
+    li strong { display: block; font-size: 1.35rem; font-weight: 600; }
+    li em { color: var(--gold); font-style: italic; }
+    li p { margin: 4px 0 0; color: var(--muted); }
+    .empty { text-align: center; color: var(--muted); font-style: italic; }
+    [hidden] { display: none !important; }
+    @media (max-width: 740px) {
+      .stats, .columns { grid-template-columns: 1fr; }
+      header { align-items: start; flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <form class="gate" id="gate">
+      <p class="kicker">Amelia &amp; Julian</p>
+      <h1>Hosts</h1>
+      <p>See who is coming to the garden.</p>
+      <label for="password">Password</label>
+      <input id="password" type="password" autocomplete="current-password" />
+      <p class="error" id="gateError" role="alert"></p>
+      <button class="submit" type="submit">Open the list</button>
+    </form>
+
+    <div id="board" hidden>
+      <header>
+        <div>
+          <p class="kicker">The guest list</p>
+          <h1>Who is coming</h1>
+        </div>
+        <button class="ghost" id="signOut" type="button">Sign out</button>
+      </header>
+      <div class="stats">
+        <div class="stat"><b id="totalComing">0</b><span>Total coming</span></div>
+        <div class="stat"><b id="partiesComing">0</b><span>Replies coming</span></div>
+        <div class="stat"><b id="partiesDeclined">0</b><span>Replies not coming</span></div>
+      </div>
+      <div class="columns">
+        <section class="panel">
+          <h2>Will come</h2>
+          <ul id="comingList"></ul>
+        </section>
+        <section class="panel">
+          <h2>Will not come</h2>
+          <ul id="declinedList"></ul>
+        </section>
+      </div>
+    </div>
+  </main>
+  <script>
+    (function () {
+      const TOKEN_KEY = "rosewood-admin";
+      const gate = document.getElementById("gate");
+      const board = document.getElementById("board");
+      const gateError = document.getElementById("gateError");
+
+      function token() {
+        return sessionStorage.getItem(TOKEN_KEY) || "";
+      }
+
+      function guestItem(guest, coming) {
+        const item = document.createElement("li");
+        const name = document.createElement("strong");
+        name.textContent = guest.name;
+        item.appendChild(name);
+        if (coming) {
+          const count = document.createElement("em");
+          const guests = Number(guest.guests) || 0;
+          count.textContent = guests === 1 ? "1 guest" : guests + " guests";
+          item.appendChild(count);
+        }
+        if (guest.note) {
+          const note = document.createElement("p");
+          note.textContent = guest.note;
+          item.appendChild(note);
+        }
+        return item;
+      }
+
+      function fillList(id, guests, coming) {
+        const list = document.getElementById(id);
+        list.replaceChildren();
+        if (!guests.length) {
+          const empty = document.createElement("li");
+          empty.className = "empty";
+          empty.textContent = "No replies yet.";
+          list.appendChild(empty);
+          return;
+        }
+        guests.forEach(function (guest) {
+          list.appendChild(guestItem(guest, coming));
+        });
+      }
+
+      function showBoard() {
+        gate.hidden = true;
+        board.hidden = false;
+      }
+
+      function loadGuests() {
+        return fetch("/api/admin/guests", {
+          headers: { Authorization: "Bearer " + token() }
+        }).then(function (response) {
+          if (response.status === 401) {
+            sessionStorage.removeItem(TOKEN_KEY);
+            board.hidden = true;
+            gate.hidden = false;
+            throw new Error("signed-out");
+          }
+          if (!response.ok) throw new Error("load");
+          return response.json();
+        }).then(function (data) {
+          document.getElementById("totalComing").textContent = data.totalComing;
+          document.getElementById("partiesComing").textContent = data.partiesComing;
+          document.getElementById("partiesDeclined").textContent = data.partiesDeclined;
+          fillList("comingList", data.coming, true);
+          fillList("declinedList", data.declined, false);
+          showBoard();
+        });
+      }
+
+      gate.addEventListener("submit", function (event) {
+        event.preventDefault();
+        gateError.textContent = "";
+        fetch("/api/admin/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ password: document.getElementById("password").value })
+        }).then(function (response) {
+          if (!response.ok) throw new Error("password");
+          return response.json();
+        }).then(function (data) {
+          sessionStorage.setItem(TOKEN_KEY, data.token);
+          return loadGuests();
+        }).catch(function (error) {
+          if (error.message !== "signed-out") {
+            gateError.textContent = "That password is not right.";
+          }
+        });
+      });
+
+      document.getElementById("signOut").addEventListener("click", function () {
+        sessionStorage.removeItem(TOKEN_KEY);
+        board.hidden = true;
+        gate.hidden = false;
+        document.getElementById("password").value = "";
+      });
+
+      if (token()) {
+        loadGuests().catch(function () { /* gate stays visible */ });
+      }
+    }());
+  </script>
+</body>
+</html>
