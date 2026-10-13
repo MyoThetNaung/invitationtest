@@ -990,6 +990,7 @@
 
       const music = document.getElementById("music");
       const musicToggle = document.getElementById("musicToggle");
+      let userPaused = false;
       music.volume = 0.45;
 
       function setMusicPlaying(playing) {
@@ -998,6 +999,7 @@
       }
 
       function startMusic() {
+        if (userPaused) return;
         const play = music.play();
         if (!play) return;
         play.then(function () { setMusicPlaying(true); }).catch(function () { setMusicPlaying(false); });
@@ -1214,11 +1216,19 @@
       document.getElementById("openBtn").addEventListener("click", openInvitation);
       document.getElementById("openText").addEventListener("click", openInvitation);
       musicToggle.addEventListener("click", function () {
-        if (music.paused) startMusic();
-        else {
+        if (music.paused) {
+          userPaused = false;
+          startMusic();
+        } else {
+          userPaused = true;
           music.pause();
           setMusicPlaying(false);
         }
+      });
+      document.addEventListener("pointerdown", function (event) {
+        if (!document.documentElement.classList.contains("opened")) return;
+        if (event.target.closest("#musicToggle")) return;
+        startMusic();
       });
       document.getElementById("calendarLink").href = calendarUrl();
 
@@ -1226,6 +1236,8 @@
       createPetals(16);
       tick();
       window.setInterval(tick, 1000);
+
+      if (document.documentElement.classList.contains("opened")) startMusic();
 
       if (canAnimate) {
         if (document.documentElement.classList.contains("instant")) setupScrollReveals();
