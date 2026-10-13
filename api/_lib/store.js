@@ -72,15 +72,17 @@ async function saveReplies(replies) {
   await redis(["SET", REDIS_KEY, JSON.stringify(replies)]);
 }
 
-function upsert(replies, record) {
-  const key = record.name.toLowerCase();
-  const next = replies.slice();
-  const index = next.findIndex(function (item) {
-    return String(item.name || "").toLowerCase() === key;
+function withIds(replies) {
+  let changed = false;
+  const next = replies.map(function (item) {
+    if (item && item.id) return item;
+    changed = true;
+    return Object.assign({}, item, {
+      id: crypto.randomUUID(),
+      createdAt: (item && item.createdAt) || new Date().toISOString(),
+    });
   });
-  if (index >= 0) next[index] = record;
-  else next.push(record);
-  return next;
+  return { replies: next, changed: changed };
 }
 
 function buildRecord(body) {
@@ -106,7 +108,14 @@ function buildRecord(body) {
       throw error;
     }
   }
-  return { name: name, attending: attending, guests: guests, note: note };
+  return {
+    id: crypto.randomUUID(),
+    name: name,
+    attending: attending,
+    guests: guests,
+    note: note,
+    createdAt: new Date().toISOString(),
+  };
 }
 
 function summary(replies) {
@@ -121,11 +130,36 @@ function summary(replies) {
   };
 }
 
+async function storedReplies() {
+  const prepared = withIds(await loadReplies());
+  if (prepared.changed) await saveReplies(prepared.replies);
+  return prepared.replies;
+}
+
 async function saveReply(body) {
   const record = buildRecord(body);
-  const replies = upsert(await loadReplies(), record);
+  const replies = await storedReplies();
+  replies.push(record);
   await saveReplies(replies);
   return record;
+}
+
+async function deleteReply(id) {
+  const replyId = cleanText(id, 80);
+  if (!replyId) {
+    const error = new Error("Choose a reply to remove.");
+    error.status = 400;
+    throw error;
+  }
+  const replies = await storedReplies();
+  const next = replies.filter(function (item) { return item.id !== replyId; });
+  if (next.length === replies.length) {
+    const error = new Error("That reply is already gone.");
+    error.status = 404;
+    throw error;
+  }
+  await saveReplies(next);
+  return summary(next);
 }
 
 module.exports = {
@@ -133,8 +167,8 @@ module.exports = {
   signToken: signToken,
   verifyToken: verifyToken,
   buildRecord: buildRecord,
-  upsert: upsert,
   summary: summary,
   saveReply: saveReply,
-  loadReplies: loadReplies,
+  deleteReply: deleteReply,
+  storedReplies: storedReplies,
 };

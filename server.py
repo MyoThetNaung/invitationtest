@@ -5,6 +5,8 @@ import json
 import os
 import secrets
 import threading
+import uuid
+from datetime import datetime, timezone
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse
 
@@ -36,6 +38,33 @@ def clean_text(value, limit):
     return text[:limit]
 
 
+def with_ids(replies):
+    changed = False
+    prepared = []
+    for item in replies:
+        if isinstance(item, dict) and item.get("id"):
+            prepared.append(item)
+            continue
+        changed = True
+        record = dict(item) if isinstance(item, dict) else {}
+        record["id"] = str(uuid.uuid4())
+        record.setdefault("createdAt", datetime.now(timezone.utc).isoformat())
+        prepared.append(record)
+    return prepared, changed
+
+
+def summary(replies):
+    coming = [item for item in replies if item.get("attending") == "yes"]
+    declined = [item for item in replies if item.get("attending") == "no"]
+    return {
+        "coming": coming,
+        "declined": declined,
+        "totalComing": sum(int(item.get("guests") or 0) for item in coming),
+        "partiesComing": len(coming),
+        "partiesDeclined": len(declined),
+    }
+
+
 class InvitationHandler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=ROOT, **kwargs)
@@ -60,6 +89,13 @@ class InvitationHandler(SimpleHTTPRequestHandler):
             self.handle_rsvp()
         elif path == "/api/admin/login":
             self.handle_login()
+        else:
+            self.send_error(404)
+
+    def do_DELETE(self):
+        path = urlparse(self.path).path
+        if path == "/api/admin/guests":
+            self.handle_delete()
         else:
             self.send_error(404)
 
@@ -98,21 +134,37 @@ class InvitationHandler(SimpleHTTPRequestHandler):
         TOKENS.add(token)
         self.send_json(200, {"token": token})
 
+    def stored_replies(self):
+        replies, changed = with_ids(load_replies())
+        if changed:
+            save_replies(replies)
+        return replies
+
     def handle_guests(self):
         if not self.authorized():
             self.send_json(401, {"message": "Please sign in."})
             return
         with LOCK:
-            replies = load_replies()
-        coming = [item for item in replies if item.get("attending") == "yes"]
-        declined = [item for item in replies if item.get("attending") == "no"]
-        self.send_json(200, {
-            "coming": coming,
-            "declined": declined,
-            "totalComing": sum(int(item.get("guests") or 0) for item in coming),
-            "partiesComing": len(coming),
-            "partiesDeclined": len(declined),
-        })
+            replies = self.stored_replies()
+        self.send_json(200, summary(replies))
+
+    def handle_delete(self):
+        if not self.authorized():
+            self.send_json(401, {"message": "Please sign in."})
+            return
+        body = self.read_json()
+        reply_id = clean_text(body.get("id") if isinstance(body, dict) else "", 80)
+        if not reply_id:
+            self.send_json(400, {"message": "Choose a reply to remove."})
+            return
+        with LOCK:
+            replies = self.stored_replies()
+            remaining = [item for item in replies if item.get("id") != reply_id]
+            if len(remaining) == len(replies):
+                self.send_json(404, {"message": "That reply is already gone."})
+                return
+            save_replies(remaining)
+        self.send_json(200, summary(remaining))
 
     def handle_rsvp(self):
         body = self.read_json()
@@ -135,18 +187,17 @@ class InvitationHandler(SimpleHTTPRequestHandler):
                 return
         else:
             guests = 0
-        record = {"name": name, "attending": attending, "guests": guests, "note": note}
-        key = name.casefold()
+        record = {
+            "id": str(uuid.uuid4()),
+            "name": name,
+            "attending": attending,
+            "guests": guests,
+            "note": note,
+            "createdAt": datetime.now(timezone.utc).isoformat(),
+        }
         with LOCK:
-            replies = load_replies()
-            updated = False
-            for index, item in enumerate(replies):
-                if str(item.get("name", "")).casefold() == key:
-                    replies[index] = record
-                    updated = True
-                    break
-            if not updated:
-                replies.append(record)
+            replies = self.stored_replies()
+            replies.append(record)
             save_replies(replies)
         self.send_json(200, record)
 

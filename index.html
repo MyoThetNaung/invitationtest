@@ -4,13 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#f4eadf" />
-  <title>Amelia &amp; Julian — Wedding Invitation</title>
-  <meta name="description" content="You are invited to the wedding of Amelia Claire Hart and Julian Ellis Reeves, Saturday, 20 June 2027, at The Rosewood Conservatory, Charleston." />
+  <title>Rose &amp; Jack — Wedding Invitation</title>
+  <meta name="description" content="You are invited to the wedding of Rose and Jack, Saturday, 20 June 2027, at Sule Shangri-La, Yangon." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Great+Vibes&display=swap" rel="stylesheet" />
   <link rel="preload" as="image" href="assets/couple-portrait.jpg" />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect fill='%23f4eadf' width='64' height='64'/%3E%3Ctext x='32' y='40' text-anchor='middle' font-size='22' font-family='Georgia' fill='%239a7344'%3EA%26J%3C/text%3E%3C/svg%3E" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect fill='%23f4eadf' width='64' height='64'/%3E%3Ctext x='32' y='40' text-anchor='middle' font-size='22' font-family='Georgia' fill='%239a7344'%3ER%26J%3C/text%3E%3C/svg%3E" />
   <script>
     try {
       if (sessionStorage.getItem("invitation-open") === "1") {
@@ -93,7 +93,7 @@
         radial-gradient(ellipse at center, rgba(255, 250, 244, 0.2), transparent 55%),
         linear-gradient(180deg, #fbf6ee 0%, #f3e6d6 100%);
     }
-    html.opened .intro {
+    html.opened:not(.gsap) .intro {
       opacity: 0;
       visibility: hidden;
       pointer-events: none;
@@ -147,7 +147,7 @@
       text-align: center;
       transition: transform 1s cubic-bezier(0.2, 0.7, 0.2, 1) 0.45s;
     }
-    html.opened .env-letter { transform: translateY(-120px); }
+    html.opened:not(.gsap) .env-letter { transform: translateY(-120px); }
     .env-letter p {
       margin: 0;
       font-family: var(--script);
@@ -191,10 +191,8 @@
       transition: transform 0.9s cubic-bezier(0.55, 0.02, 0.2, 1);
       backface-visibility: hidden;
     }
-    html.opened .env-flap {
-      transform: rotateX(188deg);
-      z-index: 0;
-    }
+    html.opened .env-flap { z-index: 0; }
+    html.opened:not(.gsap) .env-flap { transform: rotateX(188deg); }
     .wax {
       position: absolute;
       left: 50%;
@@ -225,7 +223,7 @@
       outline: 2px solid var(--gold);
       outline-offset: 4px;
     }
-    html.opened .wax {
+    html.opened:not(.gsap) .wax {
       opacity: 0;
       transform: translate(-50%, -50%) scale(0.4);
     }
@@ -260,7 +258,7 @@
       transform: translateY(-110%);
       transition: transform 0.6s ease 1.6s;
     }
-    html.opened .topnav { transform: translateY(0); }
+    html.opened:not(.gsap) .topnav { transform: translateY(0); }
     html.instant .topnav { transition: none; }
     .topnav nav { display: flex; gap: 18px; }
     .topnav a {
@@ -305,7 +303,7 @@
       opacity: 0;
       padding: 108px 20px 72px;
     }
-    html.opened .invitation {
+    html.opened:not(.gsap) .invitation {
       opacity: 1;
       transition: opacity 0.9s ease 1.7s;
     }
@@ -403,7 +401,7 @@
       stroke-dasharray: 220;
       stroke-dashoffset: 220;
     }
-    html.opened .flourish path {
+    html.opened:not(.gsap) .flourish path {
       animation: draw 1.4s ease 1.8s forwards;
     }
     html.instant .flourish path {
@@ -753,6 +751,18 @@
       }
     }
 
+    html.gsap .envelope-wrap,
+    html.gsap .petal,
+    html.gsap .portrait img,
+    html.gsap .flourish path,
+    html.gsap .reveal.in { animation: none; }
+    html.gsap .env-letter,
+    html.gsap .env-flap,
+    html.gsap .wax,
+    html.gsap .topnav,
+    html.gsap .invitation,
+    html.gsap .intro { transition: none; }
+
     @media print {
       .intro, .petals, .topnav, .rsvp, .open-text, .music-toggle { display: none !important; }
       .invitation, .reveal { opacity: 1 !important; transform: none !important; }
@@ -769,13 +779,13 @@
       <div class="envelope">
         <div class="env-body">
           <div class="env-letter">
-            <p>Amelia <span style="color:#9a7344">&amp;</span> Julian</p>
+            <p>Rose <span style="color:#9a7344">&amp;</span> Jack</p>
             <small>20 June 2027</small>
           </div>
           <div class="env-pocket"></div>
           <div class="env-flap"></div>
           <button class="wax" id="openBtn" type="button" aria-label="Open the invitation">
-            <span>A&amp;J</span>
+            <span>R&amp;J</span>
           </button>
         </div>
       </div>
@@ -787,7 +797,7 @@
   <button class="music-toggle" id="musicToggle" type="button" aria-pressed="false">Music</button>
 
   <header class="topnav">
-    <a class="brand" href="#top">A &amp; J</a>
+    <a class="brand" href="#top">R &amp; J</a>
     <nav>
       <a href="#gathering">Gathering</a>
       <a href="#letter">Letter</a>
@@ -802,14 +812,14 @@
         <p class="kicker reveal">Together with their families</p>
         <figure class="portrait reveal">
           <div class="portrait-window">
-            <img src="assets/couple-portrait.jpg" width="864" height="1152" alt="Amelia and Julian standing together among white roses in a sunlit conservatory" />
+            <img src="assets/couple-portrait.jpg" width="864" height="1152" alt="Rose and Jack standing together among white roses in a sunlit conservatory" />
           </div>
-          <figcaption class="caption">The Rosewood Conservatory</figcaption>
+          <figcaption class="caption">Sule Shangri-La, Yangon</figcaption>
         </figure>
         <h1 class="reveal">
-          <span>Amelia</span>
+          <span>Rose</span>
           <span class="amp">&amp;</span>
-          <span>Julian</span>
+          <span>Jack</span>
         </h1>
         <p class="honour reveal">request the honour of your presence at the celebration of their marriage</p>
         <svg class="flourish" viewBox="0 0 200 16" aria-hidden="true">
@@ -822,19 +832,19 @@
           <em>at four o’clock in the afternoon</em>
         </div>
         <p class="venue reveal">
-          <strong>The Rosewood Conservatory</strong>
-          <span>Charleston, South Carolina</span>
-          <a class="text-link" id="mapLink" href="https://www.google.com/maps/search/?api=1&amp;query=Charleston%20South%20Carolina" target="_blank" rel="noopener noreferrer">View the city</a>
+          <strong>Sule Shangri-La</strong>
+          <span>Yangon</span>
+          <a class="text-link" id="mapLink" href="https://maps.app.goo.gl/ppj2dqVVndHkyBNJ8" target="_blank" rel="noopener noreferrer">View the hotel</a>
         </p>
       </header>
 
       <section class="letter section reveal" id="letter">
         <p class="salute">Dearest family and friends,</p>
-        <p>There is a glasshouse in Charleston where the roses climb toward the light. On a Saturday afternoon in June, beneath that glass, we will promise each other the quiet miracles: morning coffee, long walks, and a life built gently.</p>
+        <p>We will be married at Sule Shangri-La in Yangon. On a Saturday afternoon in June, we will promise each other the quiet miracles: morning coffee, long walks, and a life built gently.</p>
         <p>Please come. Wear something that makes you feel lovely. Bring your laughter, and leave your worries at the garden gate. There will be music, a long table, and time enough to linger.</p>
         <p>Until then, we are holding a place for you.</p>
         <p class="signature">With all our love</p>
-        <p class="signed-names">Amelia Claire Hart<br />&amp; Julian Ellis Reeves</p>
+        <p class="signed-names">Rose<br />&amp; Jack</p>
       </section>
 
       <section class="section" id="day">
@@ -923,21 +933,26 @@
       </section>
 
       <footer class="footer reveal">
-        <p class="monogram">A &amp; J</p>
-        <small>20 June 2027 · Charleston</small>
+        <p class="monogram">R &amp; J</p>
+        <small>20 June 2027 · Yangon</small>
         <a class="text-link" href="/admin">Hosts</a>
       </footer>
     </article>
   </main>
 
   <noscript>
-    <p style="text-align:center; padding: 24px;">Amelia &amp; Julian invite you to their wedding on Saturday, 20 June 2027, at four o’clock, The Rosewood Conservatory, Charleston.</p>
+    <p style="text-align:center; padding: 24px;">Rose &amp; Jack invite you to their wedding on Saturday, 20 June 2027, at four o’clock, Sule Shangri-La, Yangon.</p>
   </noscript>
 
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js"></script>
   <script>
     (function () {
       const WEDDING = new Date(2027, 5, 20, 16, 0, 0);
       const STORAGE_KEY = "rosewood-rsvp";
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const canAnimate = typeof window.gsap !== "undefined" && !reduceMotion;
+      let scrollReady = false;
 
       const petals = document.getElementById("petals");
       const colors = ["#e7b7b2", "#f0d0c6", "#f6e4cf", "#ddc4c2", "#f3d5c4"];
@@ -951,11 +966,25 @@
           petal.style.setProperty("--x", Math.random() * 100 + "%");
           petal.style.setProperty("--s", (8 + Math.random() * 10) + "px");
           petal.style.setProperty("--c", colors[i % colors.length]);
-          petal.style.setProperty("--dur", (11 + Math.random() * 10) + "s");
+          const dur = 11 + Math.random() * 10;
+          const drift = Math.random() * 120 - 60;
+          const spin = 240 + Math.random() * 280;
+          petal.style.setProperty("--dur", dur + "s");
           petal.style.setProperty("--delay", (-Math.random() * 16) + "s");
-          petal.style.setProperty("--drift", (Math.random() * 120 - 60) + "px");
-          petal.style.setProperty("--spin", (240 + Math.random() * 280) + "deg");
+          petal.style.setProperty("--drift", drift + "px");
+          petal.style.setProperty("--spin", spin + "deg");
           petals.appendChild(petal);
+          if (canAnimate) {
+            const fall = gsap.fromTo(petal, { y: "-14vh", rotation: 0 }, {
+              y: "112vh",
+              x: drift,
+              rotation: spin,
+              duration: dur,
+              ease: "none",
+              repeat: -1
+            });
+            fall.progress(Math.random());
+          }
         }
       }
 
@@ -974,12 +1003,83 @@
         play.then(function () { setMusicPlaying(true); }).catch(function () { setMusicPlaying(false); });
       }
 
+      function setupMotion() {
+        if (!canAnimate) return;
+        document.documentElement.classList.add("gsap");
+        gsap.registerPlugin(ScrollTrigger);
+        gsap.set(".wax", { xPercent: -50, yPercent: -50, transformOrigin: "center center" });
+        gsap.set(".env-flap", { transformOrigin: "top center" });
+        gsap.set(".topnav", { y: -110 });
+        gsap.set(".invitation", { autoAlpha: 0 });
+        gsap.to(".portrait img", {
+          scale: 1.06,
+          duration: 22,
+          ease: "sine.inOut",
+          yoyo: true,
+          repeat: -1
+        });
+        if (document.documentElement.classList.contains("instant")) {
+          gsap.set(".topnav", { y: 0 });
+          gsap.set(".invitation", { autoAlpha: 1 });
+          gsap.set(".hero .reveal", { autoAlpha: 1, y: 0 });
+          gsap.set(".flourish path", { strokeDashoffset: 0 });
+          return;
+        }
+        gsap.from(".envelope-wrap", { autoAlpha: 0, y: 22, duration: 1.05, ease: "power2.out" });
+        gsap.to(".wax", { scale: 1.06, duration: 1.15, ease: "sine.inOut", yoyo: true, repeat: -1 });
+      }
+
+      function setupScrollReveals() {
+        if (!canAnimate || scrollReady) return;
+        scrollReady = true;
+        gsap.utils.toArray(".reveal").forEach(function (el) {
+          if (el.closest(".hero")) return;
+          gsap.fromTo(el, { autoAlpha: 0, y: 24 }, {
+            autoAlpha: 1,
+            y: 0,
+            duration: 0.9,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: el,
+              start: "top 88%",
+              toggleActions: "play none none none"
+            }
+          });
+        });
+      }
+
+      function playOpen() {
+        gsap.killTweensOf(".wax");
+        gsap.set(".wax", { scale: 1, autoAlpha: 1, xPercent: -50, yPercent: -50 });
+        gsap.timeline({ onComplete: function () { ScrollTrigger.refresh(); } })
+          .to(".wax", { scale: 0.35, autoAlpha: 0, duration: 0.4, ease: "power2.in" }, 0)
+          .to(".env-flap", { rotateX: 188, duration: 0.95, ease: "power2.inOut" }, 0.08)
+          .to(".env-letter", { y: -128, duration: 1.05, ease: "power3.out" }, 0.42)
+          .to("#intro", { autoAlpha: 0, duration: 0.7, ease: "power2.out" }, 1.2)
+          .to(".topnav", { y: 0, duration: 0.65, ease: "power2.out" }, 1.45)
+          .to(".invitation", { autoAlpha: 1, duration: 0.85, ease: "power2.out" }, 1.5)
+          .fromTo(".hero .reveal", { autoAlpha: 0, y: 20 }, {
+            autoAlpha: 1,
+            y: 0,
+            duration: 0.85,
+            stagger: 0.09,
+            ease: "power2.out"
+          }, 1.65)
+          .fromTo(".flourish path", { strokeDashoffset: 220 }, {
+            strokeDashoffset: 0,
+            duration: 1.25,
+            ease: "power1.inOut"
+          }, 2.05);
+        setupScrollReveals();
+      }
+
       function openInvitation() {
         if (document.documentElement.classList.contains("opened")) return;
         document.documentElement.classList.add("opened");
         try { sessionStorage.setItem("invitation-open", "1"); } catch (error) { /* ignore */ }
         startMusic();
-        window.setTimeout(revealHero, 1500);
+        if (canAnimate) playOpen();
+        else window.setTimeout(revealHero, 1500);
       }
 
       function revealHero() {
@@ -1030,9 +1130,9 @@
         const end = "20270620T230000";
         const params = new URLSearchParams({
           action: "TEMPLATE",
-          text: "Wedding of Amelia & Julian",
+          text: "Wedding of Rose & Jack",
           dates: start + "/" + end,
-          location: "The Rosewood Conservatory, Charleston, South Carolina",
+          location: "Sule Shangri-La, Yangon",
           details: "Ceremony at four o'clock. Cocktails, dinner, and dancing to follow."
         });
         return "https://calendar.google.com/calendar/render?" + params.toString();
@@ -1068,6 +1168,9 @@
         error.textContent = "";
         replyStatus.hidden = false;
         replyStatus.textContent = "Succeeded to send.";
+        if (canAnimate) {
+          gsap.fromTo(replyStatus, { autoAlpha: 0, y: 8 }, { autoAlpha: 1, y: 0, duration: 0.45, ease: "power2.out" });
+        }
       }
 
       form.addEventListener("change", syncGuestField);
@@ -1119,13 +1222,16 @@
       });
       document.getElementById("calendarLink").href = calendarUrl();
 
+      setupMotion();
       createPetals(16);
-      watchReveals();
       tick();
       window.setInterval(tick, 1000);
 
-      if (document.documentElement.classList.contains("instant")) {
-        revealHero();
+      if (canAnimate) {
+        if (document.documentElement.classList.contains("instant")) setupScrollReveals();
+      } else {
+        watchReveals();
+        if (document.documentElement.classList.contains("instant")) revealHero();
       }
 
       try {
